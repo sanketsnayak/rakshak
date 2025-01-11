@@ -38,10 +38,10 @@ submitButton.addEventListener("click", () => {
 
 const map = L.map("map").setView([0, 0], 10);
 
-// Add OpenStreetMap tiles
+
 L.tileLayer("https://a.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
-// Icon set for soldier markers
+
 const iconSet = [
   L.icon({
     iconUrl: "/utils/soldier1.png",
@@ -81,12 +81,11 @@ const iconSet = [
   }),
 ];
 
-// Function to randomly select an icon from the iconSet
 const getRandomIcon = () => {
   return iconSet[Math.floor(Math.random() * iconSet.length)];
 };
 
-// Geofence Visualization
+
 const geofenceCircle = L.circle(
   [geofence.center.latitude, geofence.center.longitude],
   {
@@ -97,10 +96,10 @@ const geofenceCircle = L.circle(
   }
 ).addTo(map);
 
-// Function to check if a point is inside the geofence
+
 const isInsideGeofence = (latitude, longitude) => {
   const toRad = (value) => (value * Math.PI) / 180;
-  const R = 6371e3; // Earth's radius in meters
+  const R = 6371e3;
   const lat1 = toRad(geofence.center.latitude);
   const lat2 = toRad(latitude);
   const deltaLat = toRad(latitude - geofence.center.latitude);
@@ -118,7 +117,7 @@ const isInsideGeofence = (latitude, longitude) => {
   return distance <= geofence.radius;
 };
 
-// Handle Geofence Update
+
 geofenceButton.addEventListener("click", () => {
   const centerLat = parseFloat(prompt("Enter Geofence Center Latitude:"));
   const centerLon = parseFloat(prompt("Enter Geofence Center Longitude:"));
@@ -150,39 +149,39 @@ if (navigator.geolocation) {
 }
 
 
-// Function to update the device list
+
 const updateDeviceList = () => {
-  deviceList.innerHTML = ""; // Clear the list to avoid duplicates
+  deviceList.innerHTML = ""; 
   Object.keys(markers).forEach((id) => {
     const marker = markers[id];
     const { latitude, longitude, soldierName } = marker.deviceData;
 
-    // Create a new list item for the device
+    
     const listItem = document.createElement("li");
     listItem.textContent = `Name: ${soldierName || "Unknown Soldier"}, 
                             Lat: ${latitude.toFixed(5)}, 
                             Lon: ${longitude.toFixed(5)}`;
-    listItem.id = `device-${id}`; // Unique ID for the list item
+    listItem.id = `device-${id}`; 
     deviceList.appendChild(listItem);
   });
 };
 
 
-// Receive location updates from the server
+
 socket.on("recive-location", (data) => {
   const { id, latitude, longitude, soldierName } = data;
 
   map.setView([latitude, longitude], 30);
 
   if (markers[id]) {
-    // Update the marker's position
+    
     markers[id].setLatLng([latitude, longitude]);
     markers[id].deviceData = { id, latitude, longitude, soldierName };
 
-    // Update the tooltip content to reflect the latest soldier name
+    
     markers[id].getTooltip()?.setContent(soldierName || "Unknown Soldier");
   } else {
-    // Create a new marker if it doesn't exist
+    
     markers[id] = L.marker([latitude, longitude], {
       icon: getRandomIcon(),
       title: soldierName || "Unknown Soldier",
@@ -193,7 +192,7 @@ socket.on("recive-location", (data) => {
         direction: "top",
       });
 
-    // Store the marker's data
+    
     markers[id].deviceData = { id, latitude, longitude, soldierName };
   }
 
@@ -206,7 +205,7 @@ socket.on("recive-location", (data) => {
 
 
 
-// Handle SOS button click
+
 sosButton.addEventListener("click", () => {
   if (!soldierName) {
     alert("Please enter a soldier's name before sending an Emergency.");
@@ -216,19 +215,19 @@ sosButton.addEventListener("click", () => {
   alert("Emergency signal sent!");
 });
 
-// Listen for SOS signal broadcast
+
 socket.on("sos-signal-received", (data) => {
   const { id, soldierName } = data;
 
   if (markers[id]) {
-    // Update the tooltip to indicate an emergency
+    
     markers[id].bindTooltip(`Emergency: ${soldierName}`, {
       permanent: true,
       direction: "top",
       className: "blinking",
     }).openTooltip();
 
-    // Highlight the marker with a red border
+    
     markers[id].setIcon(
       L.icon({
         iconUrl: "/utils/sos.png",
@@ -239,7 +238,7 @@ socket.on("sos-signal-received", (data) => {
     );
   }
 
-  // Highlight the corresponding device in the list
+ 
   const listItems = deviceList.querySelectorAll("li");
   listItems.forEach((item) => {
     if (item.textContent.includes(soldierName)) {
@@ -250,8 +249,8 @@ socket.on("sos-signal-received", (data) => {
   });
 });
 
-// Variable to store historical paths for each soldier
-/*const historicalPaths = {};
+
+const historicalPaths = {};
 
 
 const updateHistoricalPath = (id, latitude, longitude) => {
@@ -301,7 +300,7 @@ socket.on("recive-location", (data) => {
 
   updateDeviceList();
 });
-*/
+
 
 
 

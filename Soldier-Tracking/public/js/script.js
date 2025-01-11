@@ -207,7 +207,7 @@ socket.on("recive-location", (data) => {
 
 
 // Handle SOS button click
-/*sosButton.addEventListener("click", () => {
+sosButton.addEventListener("click", () => {
   if (!soldierName) {
     alert("Please enter a soldier's name before sending an Emergency.");
     return;
@@ -251,7 +251,7 @@ socket.on("sos-signal-received", (data) => {
 });
 
 // Variable to store historical paths for each soldier
-const historicalPaths = {};
+/*const historicalPaths = {};
 
 
 const updateHistoricalPath = (id, latitude, longitude) => {

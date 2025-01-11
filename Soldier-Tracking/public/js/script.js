@@ -87,7 +87,7 @@ const getRandomIcon = () => {
 };
 
 // Geofence Visualization
-/*const geofenceCircle = L.circle(
+const geofenceCircle = L.circle(
   [geofence.center.latitude, geofence.center.longitude],
   {
     radius: geofence.radius,
@@ -129,7 +129,7 @@ geofenceButton.addEventListener("click", () => {
   
   geofenceCircle.setLatLng([centerLat, centerLon]).setRadius(radius);
   alert("Geofence updated successfully!");
-});*/
+});
 
 
 if (navigator.geolocation) {
